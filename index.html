@@ -46,24 +46,6 @@ body {
   letter-spacing:.05em; text-shadow:0 0 8px rgba(220,150,50,0.5);
 }
 .hud-title { font-size:16px; font-weight:bold; color:#f0c060; letter-spacing:.15em; }
-#waveBar {
-  position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
-  pointer-events:none; z-index:10; display:flex; align-items:center; gap:10px;
-}
-#waveBarLabel {
-  color:#c8904a; font-size:12px; white-space:nowrap;
-  background:rgba(10,6,2,0.78); padding:4px 8px;
-  border:1px solid rgba(160,90,20,0.4); border-radius:3px;
-  text-shadow:0 0 6px rgba(200,140,60,0.6);
-}
-#waveBarTrack {
-  width:120px; height:8px; background:rgba(30,18,6,0.8);
-  border:1px solid rgba(120,70,15,0.5); border-radius:4px; overflow-y:scroll;
-}
-#waveBarFill {
-  height:100%; background:linear-gradient(90deg,#7a4010,#d4802a);
-  border-radius:4px; width:100%;
-}
 #pauseBtn {
   background:rgba(10,6,2,0.78); border:1px solid rgba(160,90,20,0.5);
   border-radius:4px; color:#d4a055; font-size:16px;
@@ -146,18 +128,6 @@ body {
 #gambBtn:hover { background:rgba(80,40,10,0.9); }
 
 /* ── SCOPE BUTTON (mobile only) ── */
-#scopeBtn {
-  display:none;
-  position:absolute; bottom:60px; right:14px; z-index:15;
-  width:64px; height:64px; border-radius:50%;
-  background:rgba(10,6,2,0.82); border:2px solid rgba(160,90,20,0.7);
-  color:#d4a055; font-size:26px; cursor:pointer;
-  touch-action:none; pointer-events:all;
-  text-shadow:0 0 10px rgba(220,150,50,0.6);
-  box-shadow:0 0 18px rgba(0,0,0,0.6);
-  -webkit-tap-highlight-color:transparent;
-}
-#scopeBtn.active { background:rgba(80,40,8,0.95); border-color:#f0c060; }
 
 /* ── RESPONSIVE: bigger tap targets on small screens ── */
 @media (max-width:600px),(pointer:coarse){
@@ -168,7 +138,6 @@ body {
     min-height:36px;
   }
   #pauseBtn { font-size:18px !important; padding:6px 16px !important; min-height:36px; }
-  #scopeBtn { display:flex; align-items:center; justify-content:center; }
 }
 #gambOverlay {
   display:none; position:absolute; inset:0; z-index:20;
@@ -380,10 +349,11 @@ body {
 .skin-card button:disabled { opacity:.4; cursor:default; }
 /* ── ADMIN PANEL ── */
 #adminOverlay {
-  display:none; position:absolute; inset:0; z-index:50;
+  display:none; position:fixed; inset:0; z-index:9999;
   background:rgba(0,0,0,0.96);
   flex-direction:column; align-items:center; justify-content:flex-start;
-  padding:20px 28px 40px; overflow-y:scroll;
+  padding:20px 28px 40px; overflow-y:auto;
+  font-family:'Georgia',serif;
 }
 #adminOverlay.open { display:flex; }
 #adminTitle {
@@ -813,7 +783,6 @@ body {
     <button id="gambBtn"   onclick="openGamb()"    title="Gambling">🎰 GAMBLE</button>
   </div>
   <button id="pauseBtn" onclick="togglePause()" title="Pause (P)" style="display:none;position:absolute;top:44px;left:50%;transform:translateX(-50%);z-index:10;">⏸</button>
-  <button id="scopeBtn" title="Scope (hold)">🔭</button>
 
   <!-- QUESTS OVERLAY -->
   <div id="questOverlay">
@@ -937,13 +906,7 @@ body {
     <div id="shopGrid"></div>
   </div>
 
-  <div id="waveBar" style="display:none">
-    <div id="waveBarLabel">Next: 10s</div>
-    <div id="waveBarTrack"><div id="waveBarFill"></div></div>
-  </div>
-
-  <!-- 2X / 4X LUCK INDICATOR -->
-  <div id="luckIndicator">
+  <!-- 2X / 4X LUCK INDICATOR -->  <div id="luckIndicator">
     <div class="li-icon" id="liIcon">🍀</div>
     <div class="li-text" id="liText">2× LUCK</div>
     <div class="li-sub"  id="liSub">RARE+ BOOSTED</div>
@@ -955,8 +918,13 @@ body {
     <div class="gmt-text" id="gmtText"></div>
   </div>
 
-  <!-- ADMIN PANEL — SECRET -->
-  <div id="adminOverlay">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL — outside wrapper, position:fixed so canvas can never block it -->
+<div id="adminOverlay">
     <button id="adminClose" onclick="closeAdmin()">✕ CLOSE</button>
     <div id="adminTitle">⚠ ADMIN PANEL ⚠</div>
     <div id="adminSub">DECK HUNTER — DEVELOPER ACCESS</div>
@@ -1005,13 +973,8 @@ body {
           border-radius:4px;color:#f0c060;font-size:12px;font-family:Georgia,serif;padding:4px 8px;outline:none;">
         <button class="admin-btn gold" onclick="adminGivePlayerCash(1)">💰 Give</button>
         <button class="admin-btn" onclick="adminGivePlayerCash(-1)" style="border-color:#ff6040;color:#ff8060">🔥 Take</button>
-        <div id="adminCashResult" style="font-size:11px;color:#a09040;font-family:Georgia,serif;margin-top:2px;width:100%;"></div>
-        <div style="width:100%;margin-top:6px;">
-          <button class="admin-btn" onclick="adminLoadPlayerList()" style="font-size:11px;">🔍 Load Player List</button>
-          <select id="adminPlayerList" style="margin-left:6px;background:rgba(20,12,4,0.9);border:1px solid rgba(160,90,20,0.5);border-radius:4px;color:#f0c060;font-size:12px;font-family:Georgia,serif;padding:3px 6px;outline:none;display:none;" onchange="adminPickPlayer(this.value)">
-            <option value="">— select player —</option>
-          </select>
-        </div>
+        <div id="adminCashResult" style="font-size:11px;color:#a09040;font-family:Georgia,serif;margin-top:4px;width:100%;max-height:160px;overflow-y:auto;"></div>
+        <button class="admin-btn" onclick="adminLoadPlayerList()" style="font-size:11px;margin-top:4px">🔍 Load Player List</button>
       </div>
     </div>
 
@@ -1033,7 +996,6 @@ body {
         <button class="admin-btn" onclick="adminNerfPlayer()" style="border-color:#ff8040;color:#ffaa60">🔨 Nerf Player</button>
         <button class="admin-btn green" onclick="adminUnblockPlayer()">✅ Unblock Player</button>
         <button class="admin-btn green" onclick="adminUnblockAll()">✅ Unblock ALL</button>
-        <button class="admin-btn" onclick="adminSetWave(1)">Reset Wave to 1</button>
         <button class="admin-btn" id="godModeBtn" onclick="adminToggleGodMode()">God Mode: OFF</button>
         <button class="admin-btn" onclick="adminFillIndex()" style="border-color:#4080a0;color:#60a0c0">📖 Fill My Index</button>
         <button class="admin-btn" id="adminGunBtn" onclick="adminUnlockGun()" style="border-color:#aa0000;color:#ff4040">☠️ Unlock Admin Gun</button>
@@ -1050,8 +1012,7 @@ body {
         <button class="admin-btn" onclick="setCasinoDur(1800)" id="cdur1800">30m</button>
         <input id="casinoDurInput" type="number" min="10" max="7200" placeholder="Custom (s)"
           style="width:88px;background:rgba(20,12,4,0.9);border:1px solid rgba(160,90,20,0.5);
-          border-radius:4px;color:#f0c060;font-size:12px;font-family:Georgia,serif;
-          padding:4px 7px;outline:none">
+          border-radius:4px;color:#f0c060;font-size:12px;font-family:Georgia,serif;padding:4px 7px;outline:none">
         <button class="admin-btn gold" onclick="setCasinoDurCustom()">Set</button>
       </div>
       <div class="admin-row" style="margin-top:6px;gap:8px">
@@ -1065,15 +1026,14 @@ body {
       <h3>🍀 LUCK BOOST</h3>
       <div class="admin-row" style="align-items:center;gap:6px;flex-wrap:wrap">
         <span style="color:#906030;font-size:11px;font-family:Georgia">Duration:</span>
-        <button class="admin-btn" onclick="setLuckDur(30)"  id="ldur30" >30s</button>
-        <button class="admin-btn" onclick="setLuckDur(60)"  id="ldur60" >1m</button>
+        <button class="admin-btn" onclick="setLuckDur(30)"  id="ldur30">30s</button>
+        <button class="admin-btn" onclick="setLuckDur(60)"  id="ldur60">1m</button>
         <button class="admin-btn" onclick="setLuckDur(120)" id="ldur120">2m</button>
         <button class="admin-btn" onclick="setLuckDur(300)" id="ldur300">5m</button>
         <button class="admin-btn" onclick="setLuckDur(600)" id="ldur600">10m</button>
         <input id="luckDurInput" type="number" min="5" max="3600" placeholder="Custom (s)"
           style="width:88px;background:rgba(20,12,4,0.9);border:1px solid rgba(160,90,20,0.5);
-          border-radius:4px;color:#f0c060;font-size:12px;font-family:Georgia,serif;
-          padding:4px 7px;outline:none">
+          border-radius:4px;color:#f0c060;font-size:12px;font-family:Georgia,serif;padding:4px 7px;outline:none">
         <button class="admin-btn gold" onclick="setLuckDurCustom()">Set</button>
       </div>
       <div class="admin-row" style="margin-top:6px;gap:8px">
@@ -1083,9 +1043,7 @@ body {
         <button class="admin-btn" onclick="adminStopLuck()" style="border-color:#604020;color:#a06030">✕ STOP LUCK</button>
       </div>
       <div id="luckAdminStatus" style="color:#706030;font-size:11px;font-family:Georgia,serif;margin-top:5px"></div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script>
@@ -1209,7 +1167,6 @@ function nameKey(n){ return n.replace(/[.#$\[\]\/]/g,'_'); }
 
 function pushScore(){
   if(!playerName) return;
-  if(playerName.toLowerCase()==='mason') return;
   // Check for an admin-imposed score cap before pushing
   db.ref('scoreCaps/'+deviceKey).once('value', snap=>{
     const cap=snap.val();
@@ -1656,18 +1613,31 @@ function drawDeck(){
 
 function drawBG_forest(){
   const px=parallaxX, py=parallaxY;
+  // Richer sunset sky
   const sg=ctx.createLinearGradient(0,0,0,H*0.56);
-  sg.addColorStop(0,'#1a0e2e'); sg.addColorStop(0.28,'#3d1a0a');
-  sg.addColorStop(0.6,'#b04010'); sg.addColorStop(0.82,'#e07828');
-  sg.addColorStop(1,'#f0a830');
+  sg.addColorStop(0,'#0e0820'); sg.addColorStop(0.2,'#2a1008');
+  sg.addColorStop(0.5,'#a03812'); sg.addColorStop(0.75,'#e06820');
+  sg.addColorStop(1,'#f5a030');
   ctx.fillStyle=sg; ctx.fillRect(0,0,W,H*0.56);
-  const sx=W*0.72,sy=H*0.22;
-  const sun=ctx.createRadialGradient(sx,sy,0,sx,sy,130);
-  sun.addColorStop(0,'rgba(255,230,100,0.85)');
-  sun.addColorStop(0.14,'rgba(255,155,45,0.45)');
-  sun.addColorStop(0.5,'rgba(190,70,8,0.12)');
+  // Sun — sharper, more defined
+  const sx=W*0.72, sy=H*0.21;
+  // Sun disc
+  ctx.save();
+  ctx.fillStyle='rgba(255,240,120,0.92)';
+  ctx.shadowColor='rgba(255,180,40,0.9)'; ctx.shadowBlur=40;
+  ctx.beginPath(); ctx.arc(sx,sy,18,0,Math.PI*2); ctx.fill();
+  ctx.shadowBlur=0; ctx.restore();
+  // Sun glow layers
+  const sun=ctx.createRadialGradient(sx,sy,10,sx,sy,160);
+  sun.addColorStop(0,'rgba(255,220,80,0.55)');
+  sun.addColorStop(0.18,'rgba(255,140,30,0.28)');
+  sun.addColorStop(0.5,'rgba(200,70,8,0.10)');
   sun.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=sun; ctx.fillRect(0,0,W,H*0.56);
+  // Horizon glow
+  const hg=ctx.createLinearGradient(0,H*0.4,0,H*0.56);
+  hg.addColorStop(0,'rgba(255,120,20,0)'); hg.addColorStop(1,'rgba(255,160,40,0.18)');
+  ctx.fillStyle=hg; ctx.fillRect(0,H*0.4,W,H*0.16);
   ctx.save(); ctx.translate(px*0.012,py*0.004); drawMountains(); ctx.restore();
   const gg=ctx.createLinearGradient(0,H*0.52,0,H*0.66);
   gg.addColorStop(0,'#1a2d10'); gg.addColorStop(1,'#2a4018');
@@ -5721,9 +5691,15 @@ function drawScope(mx,my){
 
 // ── OVERLAYS ─────────────────────────────────────────────────
 function drawVignette(){
-  const g=ctx.createRadialGradient(W/2,H/2,H*.3,W/2,H/2,H*.86);
-  g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,0.52)');
+  const g=ctx.createRadialGradient(W/2,H*0.45,H*.25,W/2,H*0.45,H*.92);
+  g.addColorStop(0,'rgba(0,0,0,0)');
+  g.addColorStop(0.6,'rgba(0,0,0,0.08)');
+  g.addColorStop(1,'rgba(0,0,0,0.62)');
   ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // Bottom fade for depth
+  const bg=ctx.createLinearGradient(0,H*0.78,0,H);
+  bg.addColorStop(0,'rgba(0,0,0,0)'); bg.addColorStop(1,'rgba(0,0,0,0.35)');
+  ctx.fillStyle=bg; ctx.fillRect(0,H*0.78,W,H*0.22);
 }
 function drawMuzzle(){
   if(muzzleFlash<=0)return;
@@ -6851,6 +6827,11 @@ canvas.addEventListener('mousemove',e=>{
   mouseY=(e.clientY-r.top)*scaleY;
 });
 canvas.addEventListener('mousedown',e=>{
+  // Don't intercept clicks when any overlay is open
+  const adminOpen=document.getElementById('adminOverlay').classList.contains('open');
+  const shopOpen=document.getElementById('shopOverlay').classList.contains('open');
+  const mapOpen=document.getElementById('mapOverlay').classList.contains('open');
+  if(adminOpen||shopOpen||mapOpen) return;
   initAudio();
   if(e.button===2){ scopeActive=true; return; }
   if(e.button===0){
@@ -7268,7 +7249,7 @@ function togglePiebald(){
 }
 
 function adminSpawn(type){
-  if(gameState!=='PLAYING') return;
+  if(gameState!=='PLAYING'&&gameState!=='RELOADING') return;
   if(spawnGlobal){
     db.ref('globalSpawn').push({ type, albino: spawnAlbino, melanistic: spawnMelanistic, piebald: spawnPiebald, ts: Date.now() });
     addFloat(W/2,H*0.40,'👑 Spawned globally!','#60ff60');
@@ -7295,10 +7276,11 @@ function adminSpawn(type){
 function adminAddCash(amount){
   score+=amount;
   localStorage.setItem('dh_score',score);
+  if(playerName) pushScore();
   updateHUD();
-  // Refresh shop cash display if open
   const shopCash=document.getElementById('shopCash');
   if(shopCash) shopCash.textContent=`Your Cash: $${score.toLocaleString()}`;
+  addFloat(W/2,H*0.45,`💰 ${amount>=0?'+':''}$${amount.toLocaleString()}`,'#f0c040');
 }
 function adminAddCustomCash(){
   const val=parseInt(document.getElementById('adminCashInput').value)||0;
@@ -7310,6 +7292,7 @@ function adminSetCash(){
   if(isNaN(val)||val<0){ alert('Enter an amount first'); return; }
   score=val;
   localStorage.setItem('dh_score',score);
+  if(playerName) pushScore();
   updateHUD();
   const shopCash=document.getElementById('shopCash');
   if(shopCash) shopCash.textContent=`Your Cash: $${score.toLocaleString()}`;
@@ -7317,25 +7300,34 @@ function adminSetCash(){
   addFloat(W/2,H*0.45,`💰 CASH SET TO $${val.toLocaleString()}`,'#80ccff');
 }
 function adminLoadPlayerList(){
-  const sel=document.getElementById('adminPlayerList');
   const resultEl=document.getElementById('adminCashResult');
   resultEl.textContent='Loading...'; resultEl.style.color='#a09040';
   db.ref('leaderboard').once('value', snap=>{
-    sel.innerHTML='<option value="">— select player —</option>';
     const players=[];
     snap.forEach(child=>{
       const v=child.val();
-      if(v && v.name) players.push({name:v.name, cash:v.cash||0});
+      if(v && v.name) players.push({key:child.key, name:v.name, cash:v.cash||0});
     });
     players.sort((a,b)=>b.cash-a.cash);
+    // Show as clickable list instead of dropdown
+    const sel=document.getElementById('adminPlayerList');
+    sel.style.display='none';
+    resultEl.innerHTML='';
+    resultEl.style.color='#a09040';
+    if(players.length===0){ resultEl.textContent='No players found.'; return; }
     players.forEach(p=>{
-      const opt=document.createElement('option');
-      opt.value=p.name;
-      opt.textContent=`${p.name} — $${p.cash.toLocaleString()}`;
-      sel.appendChild(opt);
+      const div=document.createElement('div');
+      div.style.cssText='cursor:pointer;padding:3px 0;color:#d4a055;font-size:12px;border-bottom:1px solid rgba(160,90,20,0.2);';
+      div.textContent=`${p.name} — $${p.cash.toLocaleString()}`;
+      div.onclick=()=>{
+        document.getElementById('adminTargetName').value=p.name;
+        resultEl.style.color='#80e060';
+        resultEl.innerHTML=`Selected: <b>${p.name}</b>`;
+      };
+      div.onmouseover=()=>{ div.style.color='#f0c060'; };
+      div.onmouseout=()=>{ div.style.color='#d4a055'; };
+      resultEl.appendChild(div);
     });
-    sel.style.display='inline-block';
-    resultEl.textContent=`${players.length} players loaded.`;
   });
 }
 function adminPickPlayer(name){
@@ -7419,14 +7411,6 @@ function adminWipeLB(){
     if(playerName) pushScore();
   });
 }
-function adminWipeLB(){
-  if(!confirm('Wipe the ENTIRE leaderboard? This cannot be undone.')) return;
-  db.ref('leaderboard').remove().then(()=>{
-    addFloat(W/2,H*0.4,'🗑 Leaderboard wiped!','#ff6060');
-    // Re-add just this player
-    if(playerName) pushScore();
-  });
-}
 function adminNerfPlayer(){
   const target=prompt('Player name to nerf:');
   if(!target) return;
@@ -7458,20 +7442,17 @@ function adminPushUpdate(){
 function applyUpdate(){
   location.reload(true);
 }
+window._gameLoadTime=Date.now();
 // Listen for update pushes from admin
 db.ref('gameUpdate').on('value', snap=>{
   const data=snap.val();
   if(!data) return;
-  // Only show to non-admins, or if it's newer than when they loaded
   const banner=document.getElementById('updateBanner');
   if(!banner) return;
-  // Store load time once
-  if(!window._gameLoadTime) window._gameLoadTime=Date.now();
   if(data.ts > window._gameLoadTime){
     banner.classList.add('show');
   }
 });
-window._gameLoadTime=Date.now();
 function adminUnblockPlayer(){
   const target=prompt('Player name to unblock (remove score cap):');
   if(!target) return;
@@ -7948,17 +7929,6 @@ function equipSkin(id){
   updateHUD();
   renderShop();
 }
-// Scope button (mobile)
-(function(){
-  const btn=document.getElementById('scopeBtn');
-  if(!btn)return;
-  function on(e){ e.preventDefault(); scopeActive=true;  btn.classList.add('active'); }
-  function off(e){ e.preventDefault(); scopeActive=false; btn.classList.remove('active'); }
-  btn.addEventListener('touchstart',on,{passive:false});
-  btn.addEventListener('touchend',off,{passive:false});
-  btn.addEventListener('mousedown',on);
-  btn.addEventListener('mouseup',off);
-})();
 requestAnimationFrame(loop);
 
 
