@@ -808,105 +808,8 @@ body {
 
   </div>
 
-  <!-- GAMBLING OVERLAY -->
-  <div id="gambOverlay">
-    <button class="overlay-close" onclick="closeGamb()">✕ CLOSE</button>
-    <h2>🎰 LUCKY SHOT CASINO</h2>
-    <div id="gambCash" style="font-size:13px;color:#a09040;margin-bottom:4px;"></div>
-    <div id="casinoLuckBadge" style="display:none;background:rgba(30,20,0,0.9);border:1px solid #f0e030;border-radius:6px;padding:4px 14px;margin-bottom:10px;color:#f0e030;font-size:13px;font-family:Georgia,serif;text-shadow:0 0 10px rgba(240,220,0,0.8);text-align:center;">
-      🎰 2× CASINO LUCK ACTIVE
-    </div>
 
-    <!-- SLOT MACHINE -->
-    <div id="slotMachine" style="background:rgba(20,10,4,0.9);border:2px solid rgba(180,100,20,0.6);border-radius:12px;padding:18px 24px;margin-bottom:16px;text-align:center;width:380px;">
-      <div id="slotReels" style="display:flex;justify-content:center;gap:12px;margin-bottom:14px;">
-        <div class="reel-box" id="reel0">🎯</div>
-        <div class="reel-box" id="reel1">🎯</div>
-        <div class="reel-box" id="reel2">🎯</div>
-      </div>
-      <div id="slotResult" style="font-size:15px;color:#f0c060;font-family:'Georgia',serif;min-height:22px;margin-bottom:10px;text-shadow:0 0 10px rgba(240,180,60,0.7);"></div>
-      <!-- Bet buttons -->
-      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;" id="betBtns">
-        <button class="bet-btn" onclick="setBet(100000)">$100K</button>
-        <button class="bet-btn" onclick="setBet(500000)">$500K</button>
-        <button class="bet-btn" onclick="setBet(1000000)">$1M</button>
-        <button class="bet-btn" onclick="setBet(5000000)">$5M</button>
-        <button class="bet-btn" onclick="setBet(10000000)">$10M</button>
-        <button class="bet-btn" onclick="setBet(50000000)">$50M</button>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:12px;">
-        <span style="color:#a08040;font-size:13px;font-family:Georgia,serif;">Custom:</span>
-        <input id="customBet" type="number" min="1" placeholder="Amount" style="width:110px;background:rgba(20,10,4,0.9);border:1px solid rgba(160,90,20,0.5);color:#f0c060;font-size:13px;font-family:Georgia,serif;padding:4px 8px;border-radius:4px;outline:none;">
-        <button class="bet-btn" onclick="setCustomBet()">Set</button>
-      </div>
-      <div id="betDisplay" style="color:#c09040;font-size:14px;font-family:Georgia,serif;margin-bottom:12px;">Bet: $0</div>
-      <button id="spinBtn" onclick="spinSlots()" style="background:rgba(120,60,8,0.95);border:2px solid rgba(220,140,30,0.8);border-radius:6px;color:#f0c060;font-size:18px;font-family:Georgia,serif;padding:10px 40px;cursor:pointer;letter-spacing:.1em;transition:background .15s;text-shadow:0 0 10px rgba(240,180,60,0.6);">🎰 SPIN</button>
-    </div>
-
-    <!-- WIN CHART -->
-    <div style="background:rgba(15,8,2,0.9);border:1px solid rgba(120,70,15,0.5);border-radius:10px;padding:16px 20px;width:520px;max-width:100%;">
-      <div style="font-size:15px;color:#f0c060;font-family:Georgia,serif;letter-spacing:.12em;margin-bottom:10px;text-align:center;">📊 PAYOUT CHART</div>
-      <table id="payoutTable" style="width:100%;border-collapse:collapse;font-family:Georgia,serif;font-size:13px;">
-        <thead>
-          <tr style="color:#a08040;border-bottom:1px solid rgba(120,70,15,0.4);">
-            <th style="padding:5px 8px;text-align:left;">Combination</th>
-            <th style="padding:5px 8px;text-align:center;">Odds</th>
-            <th style="padding:5px 8px;text-align:right;">Payout</th>
-          </tr>
-        </thead>
-        <tbody id="payoutBody"></tbody>
-      </table>
-    </div>
-    <div style="font-size:11px;color:#604820;margin-top:10px;font-family:Georgia,serif;font-style:italic;">House always has an edge. Gamble responsibly.</div>
-  </div>
-
-  <!-- NAME PROMPT -->
-  <div id="namePrompt">
-    <h2>🎯 DECK HUNTER</h2>
-    <p>Enter your hunter name to join the leaderboard</p>
-    <input id="nameInput" type="text" maxlength="16" placeholder="Your name..." autocomplete="off">
-    <button id="nameSubmit" onclick="submitName()">START HUNTING</button>
-  </div>
-
-  <!-- RENAME OVERLAY -->
-  <div id="renameOverlay">
-    <h2>✏ CHANGE NAME</h2>
-    <p>Your score will carry over to the new name</p>
-    <input id="renameInput" type="text" maxlength="16" placeholder="New name..." autocomplete="off">
-    <button id="renameSubmit" onclick="submitRename()">SAVE NAME</button>
-    <button id="renameCancel" onclick="closeRename()">Cancel</button>
-  </div>
-
-  <!-- LEADERBOARD -->
-  <div id="lbOverlay">
-    <button id="lbClose" class="overlay-close" onclick="closeLB()">✕ CLOSE</button>
-    <div id="lbTitle">🏆 LEADERBOARD</div>
-    <div id="lbSubtitle">TOP HUNTERS — ALL TIME CASH</div>
-    <div id="lbTimer" style="font-size:11px;color:#605028;letter-spacing:.08em;margin-bottom:10px">🔄 Refreshes in 60s</div>
-    <div id="lbPodium"></div>
-    <div id="lbRest"></div>
-    <div id="lbYourRank"></div>
-  </div>
-
-  <div id="mapOverlay">
-    <button id="mapClose" class="overlay-close" onclick="closeMap()">✕ CLOSE</button>
-    <h2>🗺 SELECT MAP</h2>
-    <div class="map-cards" id="mapCards"></div>
-  </div>
-
-  <div id="shopOverlay">
-    <button id="shopClose" class="overlay-close" onclick="closeShop()">✕ CLOSE</button>
-    <div id="shopTitle">🛒 SHOP</div>
-    <div id="shopCash"></div>
-    <div id="shopTabs" style="display:flex;gap:8px;margin-bottom:14px">
-      <button id="tabGuns"  onclick="setShopTab('guns')"  class="shop-tab active-tab">🔫 GUNS</button>
-      <button id="tabAmmo"  onclick="setShopTab('ammo')"  class="shop-tab">🔴 AMMO</button>
-      <button id="tabSkins" onclick="setShopTab('skins')" class="shop-tab">✨ SKINS</button>
-    </div>
-    <div id="shopGrid"></div>
-  </div>
-
-  <!-- 2X / 4X LUCK INDICATOR -->  <div id="luckIndicator">
+    <!-- 2X / 4X LUCK INDICATOR -->  <div id="luckIndicator">
     <div class="li-icon" id="liIcon">🍀</div>
     <div class="li-text" id="liText">2× LUCK</div>
     <div class="li-sub"  id="liSub">RARE+ BOOSTED</div>
@@ -1045,6 +948,104 @@ body {
       <div id="luckAdminStatus" style="color:#706030;font-size:11px;font-family:Georgia,serif;margin-top:5px"></div>
     </div>
 </div>
+<!-- GAMBLING OVERLAY -->
+<div id="gambOverlay">
+  <button class="overlay-close" onclick="closeGamb()">✕ CLOSE</button>
+  <h2>🎰 LUCKY SHOT CASINO</h2>
+  <div id="gambCash" style="font-size:13px;color:#a09040;margin-bottom:4px;"></div>
+  <div id="casinoLuckBadge" style="display:none;background:rgba(30,20,0,0.9);border:1px solid #f0e030;border-radius:6px;padding:4px 14px;margin-bottom:10px;color:#f0e030;font-size:13px;font-family:Georgia,serif;text-shadow:0 0 10px rgba(240,220,0,0.8);text-align:center;">
+    🎰 2× CASINO LUCK ACTIVE
+  </div>
+
+  <!-- SLOT MACHINE -->
+  <div id="slotMachine" style="background:rgba(20,10,4,0.9);border:2px solid rgba(180,100,20,0.6);border-radius:12px;padding:18px 24px;margin-bottom:16px;text-align:center;width:380px;">
+    <div id="slotReels" style="display:flex;justify-content:center;gap:12px;margin-bottom:14px;">
+      <div class="reel-box" id="reel0">🎯</div>
+      <div class="reel-box" id="reel1">🎯</div>
+      <div class="reel-box" id="reel2">🎯</div>
+    </div>
+    <div id="slotResult" style="font-size:15px;color:#f0c060;font-family:'Georgia',serif;min-height:22px;margin-bottom:10px;text-shadow:0 0 10px rgba(240,180,60,0.7);"></div>
+    <!-- Bet buttons -->
+    <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;" id="betBtns">
+      <button class="bet-btn" onclick="setBet(100000)">$100K</button>
+      <button class="bet-btn" onclick="setBet(500000)">$500K</button>
+      <button class="bet-btn" onclick="setBet(1000000)">$1M</button>
+      <button class="bet-btn" onclick="setBet(5000000)">$5M</button>
+      <button class="bet-btn" onclick="setBet(10000000)">$10M</button>
+      <button class="bet-btn" onclick="setBet(50000000)">$50M</button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:12px;">
+      <span style="color:#a08040;font-size:13px;font-family:Georgia,serif;">Custom:</span>
+      <input id="customBet" type="number" min="1" placeholder="Amount" style="width:110px;background:rgba(20,10,4,0.9);border:1px solid rgba(160,90,20,0.5);color:#f0c060;font-size:13px;font-family:Georgia,serif;padding:4px 8px;border-radius:4px;outline:none;">
+      <button class="bet-btn" onclick="setCustomBet()">Set</button>
+    </div>
+    <div id="betDisplay" style="color:#c09040;font-size:14px;font-family:Georgia,serif;margin-bottom:12px;">Bet: $0</div>
+    <button id="spinBtn" onclick="spinSlots()" style="background:rgba(120,60,8,0.95);border:2px solid rgba(220,140,30,0.8);border-radius:6px;color:#f0c060;font-size:18px;font-family:Georgia,serif;padding:10px 40px;cursor:pointer;letter-spacing:.1em;transition:background .15s;text-shadow:0 0 10px rgba(240,180,60,0.6);">🎰 SPIN</button>
+  </div>
+
+  <!-- WIN CHART -->
+  <div style="background:rgba(15,8,2,0.9);border:1px solid rgba(120,70,15,0.5);border-radius:10px;padding:16px 20px;width:520px;max-width:100%;">
+    <div style="font-size:15px;color:#f0c060;font-family:Georgia,serif;letter-spacing:.12em;margin-bottom:10px;text-align:center;">📊 PAYOUT CHART</div>
+    <table id="payoutTable" style="width:100%;border-collapse:collapse;font-family:Georgia,serif;font-size:13px;">
+      <thead>
+        <tr style="color:#a08040;border-bottom:1px solid rgba(120,70,15,0.4);">
+          <th style="padding:5px 8px;text-align:left;">Combination</th>
+          <th style="padding:5px 8px;text-align:center;">Odds</th>
+          <th style="padding:5px 8px;text-align:right;">Payout</th>
+        </tr>
+      </thead>
+      <tbody id="payoutBody"></tbody>
+    </table>
+  </div>
+  <div style="font-size:11px;color:#604820;margin-top:10px;font-family:Georgia,serif;font-style:italic;">House always has an edge. Gamble responsibly.</div>
+</div>
+
+<!-- NAME PROMPT -->
+<div id="namePrompt">
+  <h2>🎯 DECK HUNTER</h2>
+  <p>Enter your hunter name to join the leaderboard</p>
+  <input id="nameInput" type="text" maxlength="16" placeholder="Your name..." autocomplete="off">
+  <button id="nameSubmit" onclick="submitName()">START HUNTING</button>
+</div>
+
+<!-- RENAME OVERLAY -->
+<div id="renameOverlay">
+  <h2>✏ CHANGE NAME</h2>
+  <p>Your score will carry over to the new name</p>
+  <input id="renameInput" type="text" maxlength="16" placeholder="New name..." autocomplete="off">
+  <button id="renameSubmit" onclick="submitRename()">SAVE NAME</button>
+  <button id="renameCancel" onclick="closeRename()">Cancel</button>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="lbOverlay">
+  <button id="lbClose" class="overlay-close" onclick="closeLB()">✕ CLOSE</button>
+  <div id="lbTitle">🏆 LEADERBOARD</div>
+  <div id="lbSubtitle">TOP HUNTERS — ALL TIME CASH</div>
+  <div id="lbTimer" style="font-size:11px;color:#605028;letter-spacing:.08em;margin-bottom:10px">🔄 Refreshes in 60s</div>
+  <div id="lbPodium"></div>
+  <div id="lbRest"></div>
+  <div id="lbYourRank"></div>
+</div>
+
+<div id="mapOverlay">
+  <button id="mapClose" class="overlay-close" onclick="closeMap()">✕ CLOSE</button>
+  <h2>🗺 SELECT MAP</h2>
+  <div class="map-cards" id="mapCards"></div>
+</div>
+
+<div id="shopOverlay">
+  <button id="shopClose" class="overlay-close" onclick="closeShop()">✕ CLOSE</button>
+  <div id="shopTitle">🛒 SHOP</div>
+  <div id="shopCash"></div>
+  <div id="shopTabs" style="display:flex;gap:8px;margin-bottom:14px">
+    <button id="tabGuns"  onclick="setShopTab('guns')"  class="shop-tab active-tab">🔫 GUNS</button>
+    <button id="tabAmmo"  onclick="setShopTab('ammo')"  class="shop-tab">🔴 AMMO</button>
+    <button id="tabSkins" onclick="setShopTab('skins')" class="shop-tab">✨ SKINS</button>
+  </div>
+  <div id="shopGrid"></div>
+</div>
+
 
 <script>
 // ── FIREBASE (graceful fallback if offline/local) ─────────────
@@ -1240,14 +1241,6 @@ function startSyncTimer(){
   }, 1000);
 }
 startSyncTimer();
-// Remove Mason from leaderboard if present
-db.ref('leaderboard').once('value', snap=>{
-  snap.forEach(child=>{
-    const v=child.val();
-    if(v && v.name && v.name.toLowerCase()==='mason') child.ref.remove();
-  });
-});
-
 function openLB(){
   if(gameState==='MENU') return;
   paused=true;
@@ -1286,7 +1279,6 @@ function loadLB(){
     lbSnap.forEach(child=>{
       const v = child.val();
       if(!v || !v.name || typeof v.cash !== 'number') return;
-      if(v.name.toLowerCase()==='mason') return;
       if(!byName[v.name] || v.cash > byName[v.name].cash){
         byName[v.name] = { name: v.name, cash: v.cash };
       }
@@ -6931,22 +6923,17 @@ function closeAdmin(){
   document.getElementById('pauseBtn').textContent='⏸';
 }
 // ── GLOBAL SPAWN LISTENER ────────────────────────────────────
-// Only listen for spawns created AFTER this session started
+// All clients listen for admin spawn commands via Firebase
 const sessionStart = Date.now();
-// Listen for global spawns pushed by admin
 db.ref('globalSpawn').on('child_added', snap=>{
   const cmd = snap.val();
   if(!cmd || !cmd.type) return;
-  // Only skip commands that are clearly old (more than 15s before session)
-  if(cmd.ts && cmd.ts < sessionStart - 15000){ snap.ref.remove(); return; }
-  // Remove after delay so all clients have time to receive it
+  // Remove after 10s so it doesn't re-fire on reload
   setTimeout(()=>{ snap.ref.remove(); }, 10000);
-  // Force game into PLAYING if needed so spawn works
+  // Mason spawns locally already in adminSpawn() — skip Firebase echo for mason
+  if(playerName && playerName.toLowerCase()==='mason') return;
   if(gameState==='MENU') return;
-  if(gameState==='RELOADING'){
-    gameState='PLAYING';
-    updateHUD();
-  }
+  if(gameState==='RELOADING'){ gameState='PLAYING'; updateHUD(); }
   const a = new Animal(cmd.type);
   if(cmd.albino){
     a.albino=true; a.melanistic=false; a.piebald=false;
