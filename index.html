@@ -140,7 +140,7 @@ body {
   #pauseBtn { font-size:18px !important; padding:6px 16px !important; min-height:36px; }
 }
 #gambOverlay {
-  display:none; position:absolute; inset:0; z-index:20;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,2,1,0.97);
   flex-direction:column; align-items:center;
   padding:20px 24px; overflow-y:auto;
@@ -151,7 +151,7 @@ body {
   text-shadow:0 0 18px rgba(240,180,60,0.6); margin-bottom:4px;
 }
 #indexOverlay {
-  display:none; position:absolute; inset:0; z-index:20;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,3,1,0.96);
   flex-direction:column; align-items:center;
   padding:20px 24px; overflow-y:scroll;
@@ -203,7 +203,7 @@ body {
 }
 #indexClose:hover { background:rgba(110,55,10,0.95); }
 #mapOverlay {
-  display:none; position:absolute; inset:0; z-index:20;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,3,1,0.95);
   flex-direction:column; align-items:center;
   gap:16px; padding:20px 16px;
@@ -248,7 +248,7 @@ body {
 }
 #mapClose:hover { background:rgba(110,55,10,0.95); }
 #shopOverlay {
-  display:none; position:absolute; inset:0; z-index:20;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,3,1,0.93);
   flex-direction:column; align-items:center; justify-content:flex-start;
   padding:24px 28px;
@@ -421,7 +421,7 @@ body {
 .overlay-close:hover { background:rgba(80,40,8,0.99); color:#f0c060; }
 /* ── NAME PROMPT ── */
 #namePrompt {
-  display:none; position:absolute; inset:0; z-index:60;
+  display:none; position:fixed; inset:0; z-index:9999;
   background:rgba(4,3,1,0.97);
   flex-direction:column; align-items:center; justify-content:center; gap:14px;
 }
@@ -452,11 +452,11 @@ body {
 }
 #lbBtn:hover { background:rgba(80,40,10,0.9); }
 #lbOverlay {
-  display:none; position:absolute; inset:0; z-index:20;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,3,1,0.97);
   flex-direction:column; align-items:center; justify-content:flex-start;
   padding:22px 28px;
-  overflow-y:scroll;
+  overflow-y:auto;
 }
 #lbOverlay.open { display:flex; }
 #lbTitle {
@@ -543,7 +543,7 @@ body {
 }
 #lbClose:hover { background:rgba(110,55,10,0.95); }
 #renameOverlay {
-  display:none; position:absolute; inset:0; z-index:30;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,3,1,0.92);
   flex-direction:column; align-items:center; justify-content:center; gap:14px;
 }
@@ -627,7 +627,7 @@ body {
   100%{ box-shadow:0 0 14px rgba(180,0,255,0.5); transform:scale(1);   }
 }
 #questOverlay {
-  display:none; position:absolute; inset:0; z-index:20;
+  display:none; position:fixed; inset:0; z-index:9998;
   background:rgba(4,3,1,0.96);
   flex-direction:column; align-items:center;
   padding:24px 28px; gap:0;
@@ -780,7 +780,7 @@ body {
     <button id="questBtn" onclick="openQuests()"  title="Quests">📜 QUESTS</button>
     <button id="shopBtn"  onclick="openShop()"    title="Shop">🛒</button>
     <button id="indexBtn"  onclick="openIndex()"   title="Hunter's Index">📖</button>
-    <button id="gambBtn"   onclick="openGamb()"    title="Gambling">🎰 GAMBLE</button>
+    <button id="gambBtn"   onclick="openGamb()"    title="Gambling" style="display:none">🎰 GAMBLE</button>
   </div>
   <button id="pauseBtn" onclick="togglePause()" title="Pause (P)" style="display:none;position:absolute;top:44px;left:50%;transform:translateX(-50%);z-index:10;">⏸</button>
 
@@ -5845,6 +5845,19 @@ function updateHUD(){
   document.getElementById('mapDisplay').textContent=`${map.icon} ${map.name}`;
   const nd=document.getElementById('nameDisplay');
   if(nd) nd.textContent=playerName?`👤 ${playerName} ✎`:'👤 Set name ✎';
+  // Unlock gambling at $100k
+  const gambBtn=document.getElementById('gambBtn');
+  if(gambBtn){
+    const allTimeBest=parseInt(localStorage.getItem('dh_gamb_unlocked')||'0');
+    if(score>=100000||allTimeBest>=100000){
+      localStorage.setItem('dh_gamb_unlocked','100000');
+      gambBtn.style.display='';
+      gambBtn.title='Gambling';
+    } else {
+      gambBtn.style.display='none';
+      gambBtn.title=`🔒 Unlocks at $100,000`;
+    }
+  }
 }
 
 // ── SPAWN ────────────────────────────────────────────────────
@@ -6831,7 +6844,9 @@ canvas.addEventListener('mousedown',e=>{
   const adminOpen=document.getElementById('adminOverlay').classList.contains('open');
   const shopOpen=document.getElementById('shopOverlay').classList.contains('open');
   const mapOpen=document.getElementById('mapOverlay').classList.contains('open');
-  if(adminOpen||shopOpen||mapOpen) return;
+  const lbOpen=document.getElementById('lbOverlay').classList.contains('open');
+  const gambOpen=document.getElementById('gambOverlay').classList.contains('open');
+  if(adminOpen||shopOpen||mapOpen||lbOpen||gambOpen) return;
   initAudio();
   if(e.button===2){ scopeActive=true; return; }
   if(e.button===0){
@@ -6918,17 +6933,20 @@ function closeAdmin(){
 // ── GLOBAL SPAWN LISTENER ────────────────────────────────────
 // Only listen for spawns created AFTER this session started
 const sessionStart = Date.now();
-// First wipe any stale commands older than now
-db.ref('globalSpawn').once('value', snap=>{
-  snap.forEach(child=>{ child.ref.remove(); });
-});
+// Listen for global spawns pushed by admin
 db.ref('globalSpawn').on('child_added', snap=>{
   const cmd = snap.val();
   if(!cmd || !cmd.type) return;
-  // Ignore anything that was written before this session
-  if(cmd.ts < sessionStart){ snap.ref.remove(); return; }
-  snap.ref.remove();
-  if(gameState!=='PLAYING') return;
+  // Only skip commands that are clearly old (more than 15s before session)
+  if(cmd.ts && cmd.ts < sessionStart - 15000){ snap.ref.remove(); return; }
+  // Remove after delay so all clients have time to receive it
+  setTimeout(()=>{ snap.ref.remove(); }, 10000);
+  // Force game into PLAYING if needed so spawn works
+  if(gameState==='MENU') return;
+  if(gameState==='RELOADING'){
+    gameState='PLAYING';
+    updateHUD();
+  }
   const a = new Animal(cmd.type);
   if(cmd.albino){
     a.albino=true; a.melanistic=false; a.piebald=false;
@@ -7249,11 +7267,10 @@ function togglePiebald(){
 }
 
 function adminSpawn(type){
-  if(gameState!=='PLAYING'&&gameState!=='RELOADING') return;
-  if(spawnGlobal){
-    db.ref('globalSpawn').push({ type, albino: spawnAlbino, melanistic: spawnMelanistic, piebald: spawnPiebald, ts: Date.now() });
-    addFloat(W/2,H*0.40,'👑 Spawned globally!','#60ff60');
-  } else {
+  if(gameState==='MENU') return;
+  if(gameState==='RELOADING'){ gameState='PLAYING'; updateHUD(); }
+  // Always spawn locally for admin
+  const spawnLocal=()=>{
     const a=new Animal(type);
     if(spawnAlbino){
       a.albino=true; a.melanistic=false; a.piebald=false;
@@ -7270,7 +7287,15 @@ function adminSpawn(type){
     }
     animals.push(a);
     const rar=RARITIES[a.rarity];
-    addFloat(W/2,H*0.15,`[LOCAL] ${type.toUpperCase()}`,rar.color);
+    addFloat(W/2,H*0.15,`👑 ${type.toUpperCase()}`,rar.color);
+  };
+  if(spawnGlobal){
+    // Push to Firebase for everyone else AND spawn locally right away
+    db.ref('globalSpawn').push({ type, albino: spawnAlbino, melanistic: spawnMelanistic, piebald: spawnPiebald, ts: Date.now() });
+    spawnLocal();
+    addFloat(W/2,H*0.40,'👑 Spawned for EVERYONE!','#60ff60');
+  } else {
+    spawnLocal();
   }
 }
 function adminAddCash(amount){
